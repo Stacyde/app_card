@@ -14,10 +14,10 @@ import static com.codeborne.selenide.Selenide.*;
 
 
 public class SelenideTest {
-    LocalDate date = LocalDate.now(); //получаем текущую дату
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy"); //формат даты дд.мм.гггг
-    LocalDate nextDate = date.plusDays(3); //прибавляем к текущей дате +3
-    LocalDate previousDate = date.minusDays(3); //убавляем к текущей дате -3
+    LocalDate date = LocalDate.now();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    LocalDate nextDate = date.plusDays(3);
+    LocalDate previousDate = date.minusDays(3);
 
     @Test
     void shouldDelivery() {
@@ -165,34 +165,37 @@ public class SelenideTest {
         $(By.className("button__text")).click();
         $x("//span[contains(text(),'Неверно введена дата')]");
     }
-        @Test
-        void errorCity() {
-            Configuration.holdBrowserOpen = true;
-            open("http://localhost:9999/");
-            $(By.cssSelector("[data-test-id='city'] input")).setValue("Питер");
-            $("[placeholder='Дата встречи']").click();
-            Selenide.actions().keyDown(Keys.CONTROL).sendKeys("a").sendKeys(Keys.BACK_SPACE).perform();
-            $("[name='name']").setValue("");
-            $("[placeholder='Дата встречи']").doubleClick().sendKeys(formatter.format(nextDate));
-            $("[name='phone']").setValue("+79370357057");
-            $("[data-test-id='agreement']").click();
-            $(By.className("button__text")).click();
-            $x("//span[contains(text(),'Доставка в выбранный город недоступна')]");
-        }
-        @Test
-        void errorEmptyFieldCity() {
-            Configuration.holdBrowserOpen = true;
-            open("http://localhost:9999/");
-            $(By.cssSelector("[data-test-id='city'] input")).setValue("");
-            $("[placeholder='Дата встречи']").click();
-            Selenide.actions().keyDown(Keys.CONTROL).sendKeys("a").sendKeys(Keys.BACK_SPACE).perform();
-            $("[name='name']").setValue("");
-            $("[placeholder='Дата встречи']").doubleClick().sendKeys(formatter.format(nextDate));
-            $("[name='phone']").setValue("+79370357057");
-            $("[data-test-id='agreement']").click();
-            $(By.className("button__text")).click();
-            $x("//span[contains(text(),'Поле обязательно для заполнения')]");
-        }
+
+    @Test
+    void errorCity() {
+        Configuration.holdBrowserOpen = true;
+        open("http://localhost:9999/");
+        $(By.cssSelector("[data-test-id='city'] input")).setValue("Питер");
+        $("[placeholder='Дата встречи']").click();
+        Selenide.actions().keyDown(Keys.CONTROL).sendKeys("a").sendKeys(Keys.BACK_SPACE).perform();
+        $("[name='name']").setValue("");
+        $("[placeholder='Дата встречи']").doubleClick().sendKeys(formatter.format(nextDate));
+        $("[name='phone']").setValue("+79370357057");
+        $("[data-test-id='agreement']").click();
+        $(By.className("button__text")).click();
+        $x("//span[contains(text(),'Доставка в выбранный город недоступна')]");
+    }
+
+    @Test
+    void errorEmptyFieldCity() {
+        Configuration.holdBrowserOpen = true;
+        open("http://localhost:9999/");
+        $(By.cssSelector("[data-test-id='city'] input")).setValue("");
+        $("[placeholder='Дата встречи']").click();
+        Selenide.actions().keyDown(Keys.CONTROL).sendKeys("a").sendKeys(Keys.BACK_SPACE).perform();
+        $("[name='name']").setValue("");
+        $("[placeholder='Дата встречи']").doubleClick().sendKeys(formatter.format(nextDate));
+        $("[name='phone']").setValue("+79370357057");
+        $("[data-test-id='agreement']").click();
+        $(By.className("button__text")).click();
+        $x("//span[contains(text(),'Поле обязательно для заполнения')]");
+    }
+
     @Test
     void errorForeignCity() {
         Configuration.holdBrowserOpen = true;
@@ -208,5 +211,5 @@ public class SelenideTest {
         $x("//span[contains(text(),'Доставка в выбранный город недоступна')]");
     }
 
-    }
+}
 
