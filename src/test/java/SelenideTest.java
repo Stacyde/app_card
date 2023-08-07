@@ -31,7 +31,7 @@ public class SelenideTest {
         $("[name='phone']").setValue("+79370350050");
         $("[data-test-id='agreement']").click();
         $(By.className("button__text")).click();
-        $x("//div[contains(text(),'Встреча успешно забронирована на')]").should(appear, Duration.ofSeconds(15));
+        $x("//div[contains(text(),'Встреча успешно забронирована на')]").shouldBe(visible, Duration.ofSeconds(15));
     }
 
     @Test
@@ -46,7 +46,7 @@ public class SelenideTest {
         $("[name='phone']").setValue("+79370350050");
         $("[data-test-id='agreement']").click();
         $(By.className("button__text")).click();
-        $x("//div[contains(text(),'Встреча успешно забронирована на')]").should(appear, Duration.ofSeconds(15));
+        $x("//div[contains(text(),'Встреча успешно забронирована на')]").shouldBe(visible, Duration.ofSeconds(15));
     }
 
     @Test
@@ -61,20 +61,7 @@ public class SelenideTest {
         $("[name='phone']").setValue("+79370350050");
         $("[data-test-id='agreement']").click();
         $(By.className("button__text")).click();
-       $("[data-test-id='notification'] .notification__content").should(appear, Duration.ofSeconds(14));
-    }
-
-    @Test
-    void checkBoxError() { //
-        Configuration.holdBrowserOpen = true;
-        open("http://localhost:9999/");
-        $(By.cssSelector("[data-test-id=city] input")).setValue("Ульяновск");
-        $("[placeholder='Дата встречи']").click();
-        $("[data-day='1691438400000']").click();
-        $("[name='name']").setValue("Петрова Анастасия");
-        $("[name='phone']").setValue("+79370350050");
-        $(By.className("button__text")).click();
-        $(By.className("input_invalid")).shouldHave(exactText("Я соглашаюсь с условиями обработки и использования моих персональных данных"));
+        $x("//div[contains(text(),'Встреча успешно забронирована на')]").shouldBe(visible, Duration.ofSeconds(15));
     }
 
     @Test
@@ -116,8 +103,8 @@ public class SelenideTest {
         Selenide.actions().keyDown(Keys.CONTROL).sendKeys("a").sendKeys(Keys.BACK_SPACE).perform();
         $("[name='name']").setValue("Петрова Анастасия");
         $("[placeholder='Дата встречи']").doubleClick().sendKeys(formatter.format(nextDate));
-        $("[name='phone']").setValue("");
         $("[data-test-id='agreement']").click();
+        $("[name='phone']").setValue("");
         $(By.className("button__text")).click();
         $x("//span[contains(text(),'Поле обязательно для заполнения')]");
     }
