@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import static com.codeborne.selenide.Condition.*;
+import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 
 
@@ -20,7 +21,7 @@ public class SelenideTest {
     LocalDate previousDate = date.minusDays(3);
 
     @Test
-    void shouldDelivery() { //
+    void shouldDelivery() {
         Configuration.holdBrowserOpen = true;
         open("http://localhost:9999/");
         $(By.cssSelector("[data-test-id='city'] input")).setValue("Ульяновск");
@@ -35,7 +36,7 @@ public class SelenideTest {
     }
 
     @Test
-    void doubleNameCity() { //
+    void doubleNameCity() {
         Configuration.holdBrowserOpen = true;
         open("http://localhost:9999/");
         $(By.cssSelector("[data-test-id='city'] input")).setValue("Горно-Алтайск");
@@ -46,7 +47,7 @@ public class SelenideTest {
         $("[name='phone']").setValue("+79370350050");
         $("[data-test-id='agreement']").click();
         $(By.className("button__text")).click();
-        $x("//div[contains(text(),'Встреча успешно забронирована на')]").shouldBe(visible, Duration.ofSeconds(15));
+        $(byText("Встреча успешно забронирована на")).shouldBe(visible, Duration.ofSeconds(15));
     }
 
     @Test
@@ -102,9 +103,9 @@ public class SelenideTest {
         $("[placeholder='Дата встречи']").click();
         Selenide.actions().keyDown(Keys.CONTROL).sendKeys("a").sendKeys(Keys.BACK_SPACE).perform();
         $("[name='name']").setValue("Петрова Анастасия");
-        $("[placeholder='Дата встречи']").doubleClick().sendKeys(formatter.format(nextDate));
         $("[data-test-id='agreement']").click();
         $("[name='phone']").setValue("");
+        $("[placeholder='Дата встречи']").doubleClick().sendKeys(formatter.format(nextDate));
         $(By.className("button__text")).click();
         $x("//span[contains(text(),'Поле обязательно для заполнения')]");
     }
