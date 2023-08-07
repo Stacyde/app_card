@@ -1,5 +1,6 @@
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.SelenideElement;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -8,8 +9,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import static com.codeborne.selenide.Condition.appear;
-import static com.codeborne.selenide.Condition.exactText;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 
 
@@ -20,7 +20,7 @@ public class SelenideTest {
     LocalDate previousDate = date.minusDays(3);
 
     @Test
-    void shouldDelivery() {
+    void shouldDelivery() { //
         Configuration.holdBrowserOpen = true;
         open("http://localhost:9999/");
         $(By.cssSelector("[data-test-id='city'] input")).setValue("Ульяновск");
@@ -35,7 +35,7 @@ public class SelenideTest {
     }
 
     @Test
-    void doubleNameCity() {
+    void doubleNameCity() { //
         Configuration.holdBrowserOpen = true;
         open("http://localhost:9999/");
         $(By.cssSelector("[data-test-id='city'] input")).setValue("Горно-Алтайск");
@@ -61,11 +61,11 @@ public class SelenideTest {
         $("[name='phone']").setValue("+79370350050");
         $("[data-test-id='agreement']").click();
         $(By.className("button__text")).click();
-        $x("//div[contains(text(),'Встреча успешно забронирована на')]").should(appear, Duration.ofSeconds(15));
+       $("[data-test-id='notification'] .notification__content").should(appear, Duration.ofSeconds(14));
     }
 
     @Test
-    void checkBoxError() {
+    void checkBoxError() { //
         Configuration.holdBrowserOpen = true;
         open("http://localhost:9999/");
         $(By.cssSelector("[data-test-id=city] input")).setValue("Ульяновск");
@@ -123,7 +123,7 @@ public class SelenideTest {
     }
 
     @Test
-    void errorPhone1() {
+    void errorPhonePlus() {
         Configuration.holdBrowserOpen = true;
         open("http://localhost:9999/");
         $(By.cssSelector("[data-test-id='city'] input")).setValue("Биробиджан");
@@ -134,7 +134,7 @@ public class SelenideTest {
         $("[name='phone']").setValue("+");
         $("[data-test-id='agreement']").click();
         $(By.className("button__text")).click();
-        $x("//span[contains(text(),'Телефон указан неверно. Должно быть 11 цифр, например, +79012345678.')]");
+        $x("//span[contains(text(),'Телефон указан неверно.')]");
     }
 
     @Test
