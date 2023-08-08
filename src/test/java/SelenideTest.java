@@ -95,9 +95,20 @@ public class SelenideTest {
         $("[name='phone']").setValue("+79370350050");
         $("[data-test-id='agreement']").click();
         $(By.className("button__text")).click();
-        $(".input_invalid").shouldHave(Condition.text("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы."));
+        $(".input_invalid").shouldHave(Condition.text("Имя и Фамилия указаны неверно. Допустимы только русские буквы, пробелы и дефисы."));
     }
-
+    @Test
+    void error() {
+        Configuration.holdBrowserOpen = true;
+        open("http://localhost:9999/");
+        $(By.cssSelector("[data-test-id='city'] input")).setValue("Ульяновск");
+        $("[name='name']").setValue("Petrova Anastasiya");
+        $("[placeholder='Дата встречи']").doubleClick().sendKeys(planningDate);
+        $("[name='phone']").setValue("+79370350050");
+        $("[data-test-id='agreement']").click();
+        $(By.className("button__text")).click();
+        $(".input_invalid").shouldHave(Condition.text("Имя и Фамилия указаны неверно. Допустимы только русские буквы, пробелы и дефисы."));
+    }
     @Test
     void errorPhone() {
         Configuration.holdBrowserOpen = true;
