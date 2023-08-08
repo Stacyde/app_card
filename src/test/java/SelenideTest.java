@@ -130,9 +130,9 @@ public class SelenideTest {
         open("http://localhost:9999/");
         $(By.cssSelector("[data-test-id='city'] input")).setValue("Нижний Новгород");
         $("[name='name']").setValue("Петрова Анастасия");
-        $("[placeholder='Дата встречи']").sendKeys(Keys.CONTROL + "a"+ Keys.BACK_SPACE);
+        $("[data-test-id='date'] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
         $("[data-test-id='agreement']").click();
-        $("[name='phone']").setValue("+79370357057");
+        $("[name='phone']").setValue("+79370357056");
         $(By.className("button__text")).click();
         $(".input_invalid").shouldHave(Condition.text("Неверно введена дата"));
 
