@@ -1,3 +1,4 @@
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
@@ -10,29 +11,34 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import static com.codeborne.selenide.Condition.*;
-import static com.codeborne.selenide.Selectors.byText;
+import static com.codeborne.selenide.Selectors.*;
 import static com.codeborne.selenide.Selenide.*;
 
 
 public class SelenideTest {
-    LocalDate date = LocalDate.now();
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-    LocalDate nextDate = date.plusDays(3);
-    LocalDate previousDate = date.minusDays(3);
+    public String generateDate(long addDays, String pattern) {
+        return LocalDate.now().plusDays(addDays).format(DateTimeFormatter.ofPattern(pattern));
+    }
+    public String date(long addDays, String pattern) {
+        return LocalDate.now().minusDays(addDays).format(DateTimeFormatter.ofPattern(pattern));
+    }
+    String planningDate = generateDate(3, "dd.MM.yyyy");
+    String errorDate = date(4,"dd.MM.yyyy");
 
     @Test
     void shouldDelivery() {
         Configuration.holdBrowserOpen = true;
         open("http://localhost:9999/");
         $(By.cssSelector("[data-test-id='city'] input")).setValue("Ульяновск");
-        $("[placeholder='Дата встречи']").click();
-        Selenide.actions().keyDown(Keys.CONTROL).sendKeys("a").sendKeys(Keys.BACK_SPACE).perform();
         $("[name='name']").setValue("Петрова Анастасия");
-        $("[placeholder='Дата встречи']").doubleClick().sendKeys(formatter.format(nextDate));
+        $("[placeholder='Дата встречи']").doubleClick().sendKeys(planningDate);
         $("[name='phone']").setValue("+79370350050");
         $("[data-test-id='agreement']").click();
         $(By.className("button__text")).click();
-        $x("//div[contains(text(),'Встреча успешно забронирована на')]").shouldBe(visible, Duration.ofSeconds(15));
+        $(".notification__content")
+                .shouldHave(Condition.text("Встреча успешно забронирована на " + planningDate), Duration.ofSeconds(15))
+                .shouldBe(Condition.visible);
+
     }
 
     @Test
@@ -40,14 +46,14 @@ public class SelenideTest {
         Configuration.holdBrowserOpen = true;
         open("http://localhost:9999/");
         $(By.cssSelector("[data-test-id='city'] input")).setValue("Горно-Алтайск");
-        $("[placeholder='Дата встречи']").click();
-        Selenide.actions().keyDown(Keys.CONTROL).sendKeys("a").sendKeys(Keys.BACK_SPACE).perform();
         $("[name='name']").setValue("Петрова Анастасия-Мария");
-        $("[placeholder='Дата встречи']").doubleClick().sendKeys(formatter.format(nextDate));
+        $("[placeholder='Дата встречи']").doubleClick().sendKeys(planningDate);
         $("[name='phone']").setValue("+79370350050");
         $("[data-test-id='agreement']").click();
         $(By.className("button__text")).click();
-        $(byText("Встреча успешно забронирована на")).shouldBe(visible, Duration.ofSeconds(15));
+        $(".notification__content")
+                .shouldHave(Condition.text("Встреча успешно забронирована на " + planningDate), Duration.ofSeconds(15))
+                .shouldBe(Condition.visible);
     }
 
     @Test
@@ -55,14 +61,14 @@ public class SelenideTest {
         Configuration.holdBrowserOpen = true;
         open("http://localhost:9999/");
         $(By.cssSelector("[data-test-id='city'] input")).setValue("Нижний Новгород");
-        $("[placeholder='Дата встречи']").click();
-        Selenide.actions().keyDown(Keys.CONTROL).sendKeys("a").sendKeys(Keys.BACK_SPACE).perform();
         $("[name='name']").setValue("Петрова Анастасия Мария");
-        $("[placeholder='Дата встречи']").doubleClick().sendKeys(formatter.format(nextDate));
+        $("[placeholder='Дата встречи']").doubleClick().sendKeys(planningDate);
         $("[name='phone']").setValue("+79370350050");
         $("[data-test-id='agreement']").click();
         $(By.className("button__text")).click();
-        $x("//div[contains(text(),'Встреча успешно забронирована на')]").shouldBe(visible, Duration.ofSeconds(15));
+        $(".notification__content")
+                .shouldHave(Condition.text("Встреча успешно забронирована на " + planningDate), Duration.ofSeconds(15))
+                .shouldBe(Condition.visible);
     }
 
     @Test
@@ -70,14 +76,13 @@ public class SelenideTest {
         Configuration.holdBrowserOpen = true;
         open("http://localhost:9999/");
         $(By.cssSelector("[data-test-id='city'] input")).setValue("Нижний Новгород");
-        $("[placeholder='Дата встречи']").click();
-        Selenide.actions().keyDown(Keys.CONTROL).sendKeys("a").sendKeys(Keys.BACK_SPACE).perform();
         $("[name='name']").setValue("");
-        $("[placeholder='Дата встречи']").doubleClick().sendKeys(formatter.format(nextDate));
+        $("[placeholder='Дата встречи']").doubleClick().sendKeys(planningDate);
         $("[name='phone']").setValue("+79370350050");
         $("[data-test-id='agreement']").click();
         $(By.className("button__text")).click();
-        $x("//span[contains(text(),'Поле обязательно для заполнения')]");
+        $x("//span[contains(text(),'Поле обязательно для заполнения')]").shouldHave(Condition.text("Поле обязательно для заполнения"));
+
     }
 
     @Test
@@ -85,14 +90,12 @@ public class SelenideTest {
         Configuration.holdBrowserOpen = true;
         open("http://localhost:9999/");
         $(By.cssSelector("[data-test-id='city'] input")).setValue("Херсон");
-        $("[placeholder='Дата встречи']").click();
-        Selenide.actions().keyDown(Keys.CONTROL).sendKeys("a").sendKeys(Keys.BACK_SPACE).perform();
         $("[name='name']").setValue("Petrova Anastasiya");
-        $("[placeholder='Дата встречи']").doubleClick().sendKeys(formatter.format(nextDate));
+        $("[placeholder='Дата встречи']").doubleClick().sendKeys(planningDate);
         $("[name='phone']").setValue("+79370350050");
         $("[data-test-id='agreement']").click();
         $(By.className("button__text")).click();
-        $x("//span[contains(text(),'Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы.')]");
+        $(".input_invalid").shouldHave(Condition.text("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы."));
     }
 
     @Test
@@ -100,14 +103,12 @@ public class SelenideTest {
         Configuration.holdBrowserOpen = true;
         open("http://localhost:9999/");
         $(By.cssSelector("[data-test-id='city'] input")).setValue("Москва");
-        $("[placeholder='Дата встречи']").click();
-        Selenide.actions().keyDown(Keys.CONTROL).sendKeys("a").sendKeys(Keys.BACK_SPACE).perform();
         $("[name='name']").setValue("Петрова Анастасия");
         $("[data-test-id='agreement']").click();
         $("[name='phone']").setValue("");
-        $("[placeholder='Дата встречи']").doubleClick().sendKeys(formatter.format(nextDate));
+        $("[placeholder='Дата встречи']").doubleClick().sendKeys(planningDate);
         $(By.className("button__text")).click();
-        $x("//span[contains(text(),'Поле обязательно для заполнения')]");
+        $(".input_invalid").shouldHave(Condition.text("Поле обязательно для заполнения"));
     }
 
     @Test
@@ -115,14 +116,12 @@ public class SelenideTest {
         Configuration.holdBrowserOpen = true;
         open("http://localhost:9999/");
         $(By.cssSelector("[data-test-id='city'] input")).setValue("Биробиджан");
-        $("[placeholder='Дата встречи']").click();
-        Selenide.actions().keyDown(Keys.CONTROL).sendKeys("a").sendKeys(Keys.BACK_SPACE).perform();
         $("[name='name']").setValue("Петрова Анастасия");
-        $("[placeholder='Дата встречи']").doubleClick().sendKeys(formatter.format(nextDate));
+        $("[placeholder='Дата встречи']").doubleClick().sendKeys(planningDate);
         $("[name='phone']").setValue("+");
         $("[data-test-id='agreement']").click();
         $(By.className("button__text")).click();
-        $x("//span[contains(text(),'Телефон указан неверно.')]");
+        $(".input_invalid").shouldHave(Condition.text("Телефон указан неверно"));
     }
 
     @Test
@@ -130,13 +129,14 @@ public class SelenideTest {
         Configuration.holdBrowserOpen = true;
         open("http://localhost:9999/");
         $(By.cssSelector("[data-test-id='city'] input")).setValue("Нижний Новгород");
+        $("[name='name']").setValue("Петрова Анастасия");
         $("[placeholder='Дата встречи']").click();
         Selenide.actions().keyDown(Keys.CONTROL).sendKeys("a").sendKeys(Keys.BACK_SPACE).perform();
-        $("[name='name']").setValue("Петрова Анастасия");
-        $("[name='phone']").setValue("+79370357057");
         $("[data-test-id='agreement']").click();
+        $("[name='phone']").setValue("+79370357057");
         $(By.className("button__text")).click();
-        $x("//span[contains(text(),'Неверно введена дата')]");
+        $(".input_invalid").shouldHave(Condition.text("Неверно введена дата"));
+
     }
 
     @Test
@@ -144,14 +144,12 @@ public class SelenideTest {
         Configuration.holdBrowserOpen = true;
         open("http://localhost:9999/");
         $(By.cssSelector("[data-test-id='city'] input")).setValue("Салехард");
-        $("[placeholder='Дата встречи']").click();
-        Selenide.actions().keyDown(Keys.CONTROL).sendKeys("a").sendKeys(Keys.BACK_SPACE).perform();
         $("[name='name']").setValue("Петрова Анастасия");
-        $("[placeholder='Дата встречи']").doubleClick().sendKeys(formatter.format(previousDate));
+        $("[placeholder='Дата встречи']").doubleClick().sendKeys(errorDate);
         $("[name='phone']").setValue("+79370357057");
         $("[data-test-id='agreement']").click();
         $(By.className("button__text")).click();
-        $x("//span[contains(text(),'Неверно введена дата')]");
+        $(".input_invalid").shouldHave(Condition.text("Заказ на выбранную дату невозможен"));
     }
 
     @Test
@@ -159,14 +157,12 @@ public class SelenideTest {
         Configuration.holdBrowserOpen = true;
         open("http://localhost:9999/");
         $(By.cssSelector("[data-test-id='city'] input")).setValue("Питер");
-        $("[placeholder='Дата встречи']").click();
-        Selenide.actions().keyDown(Keys.CONTROL).sendKeys("a").sendKeys(Keys.BACK_SPACE).perform();
         $("[name='name']").setValue("");
-        $("[placeholder='Дата встречи']").doubleClick().sendKeys(formatter.format(nextDate));
+        $("[placeholder='Дата встречи']").doubleClick().sendKeys(planningDate);
         $("[name='phone']").setValue("+79370357057");
         $("[data-test-id='agreement']").click();
         $(By.className("button__text")).click();
-        $x("//span[contains(text(),'Доставка в выбранный город недоступна')]");
+        $("[data-test-id='city']").shouldHave(Condition.text("Доставка в выбранный город недоступна"));
     }
 
     @Test
@@ -174,14 +170,13 @@ public class SelenideTest {
         Configuration.holdBrowserOpen = true;
         open("http://localhost:9999/");
         $(By.cssSelector("[data-test-id='city'] input")).setValue("");
-        $("[placeholder='Дата встречи']").click();
-        Selenide.actions().keyDown(Keys.CONTROL).sendKeys("a").sendKeys(Keys.BACK_SPACE).perform();
         $("[name='name']").setValue("");
-        $("[placeholder='Дата встречи']").doubleClick().sendKeys(formatter.format(nextDate));
+        $("[placeholder='Дата встречи']").doubleClick().sendKeys(planningDate);
         $("[name='phone']").setValue("+79370357057");
         $("[data-test-id='agreement']").click();
         $(By.className("button__text")).click();
-        $x("//span[contains(text(),'Поле обязательно для заполнения')]");
+        $("[data-test-id='city']").shouldHave(Condition.text("Поле обязательно для заполнения"));
+
     }
 
     @Test
@@ -189,14 +184,12 @@ public class SelenideTest {
         Configuration.holdBrowserOpen = true;
         open("http://localhost:9999/");
         $(By.cssSelector("[data-test-id='city'] input")).setValue("Piter");
-        $("[placeholder='Дата встречи']").click();
-        Selenide.actions().keyDown(Keys.CONTROL).sendKeys("a").sendKeys(Keys.BACK_SPACE).perform();
         $("[name='name']").setValue("");
-        $("[placeholder='Дата встречи']").doubleClick().sendKeys(formatter.format(nextDate));
+        $("[placeholder='Дата встречи']").doubleClick().sendKeys(planningDate);
         $("[name='phone']").setValue("+79370357057");
         $("[data-test-id='agreement']").click();
         $(By.className("button__text")).click();
-        $x("//span[contains(text(),'Доставка в выбранный город недоступна')]");
+        $("[data-test-id='city']").shouldHave(Condition.text("Доставка в выбранный город недоступна"));
     }
 
 }
