@@ -89,7 +89,7 @@ public class SelenideTest {
     void errorName1() {
         Configuration.holdBrowserOpen = true;
         open("http://localhost:9999/");
-        $(By.cssSelector("[data-test-id='city'] input")).setValue("Херсон");
+        $(By.cssSelector("[data-test-id='city'] input")).setValue("Ульяновск");
         $("[name='name']").setValue("Petrova Anastasiya");
         $("[placeholder='Дата встречи']").doubleClick().sendKeys(planningDate);
         $("[name='phone']").setValue("+79370350050");
@@ -130,8 +130,7 @@ public class SelenideTest {
         open("http://localhost:9999/");
         $(By.cssSelector("[data-test-id='city'] input")).setValue("Нижний Новгород");
         $("[name='name']").setValue("Петрова Анастасия");
-        $("[placeholder='Дата встречи']").click();
-        Selenide.actions().keyDown(Keys.CONTROL).sendKeys("a").sendKeys(Keys.BACK_SPACE).perform();
+        $("[placeholder='Дата встречи']").sendKeys(Keys.CONTROL + "a"+ Keys.BACK_SPACE);
         $("[data-test-id='agreement']").click();
         $("[name='phone']").setValue("+79370357057");
         $(By.className("button__text")).click();
@@ -184,7 +183,7 @@ public class SelenideTest {
         Configuration.holdBrowserOpen = true;
         open("http://localhost:9999/");
         $(By.cssSelector("[data-test-id='city'] input")).setValue("Piter");
-        $("[name='name']").setValue("");
+        $("[name='name']").setValue("Анастасия Петрова");
         $("[placeholder='Дата встречи']").doubleClick().sendKeys(planningDate);
         $("[name='phone']").setValue("+79370357057");
         $("[data-test-id='agreement']").click();
