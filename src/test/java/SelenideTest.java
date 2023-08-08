@@ -81,7 +81,7 @@ public class SelenideTest {
         $("[name='phone']").setValue("+79370350050");
         $("[data-test-id='agreement']").click();
         $(By.className("button__text")).click();
-        $x("//span[contains(text(),'Поле обязательно для заполнения')]").shouldHave(Condition.text("Поле обязательно для заполнения"));
+        $(".input_invalid").shouldHave(Condition.text("Поле обязательно для заполнения"));
 
     }
 
@@ -89,7 +89,7 @@ public class SelenideTest {
     void errorName1() {
         Configuration.holdBrowserOpen = true;
         open("http://localhost:9999/");
-        $(By.cssSelector("[data-test-id='city'] input")).setValue("Ульяновск");
+        $(By.cssSelector("[data-test-id='city'] input")).setValue("Херсон");
         $("[name='name']").setValue("Petrova Anastasiya");
         $("[placeholder='Дата встречи']").doubleClick().sendKeys(planningDate);
         $("[name='phone']").setValue("+79370350050");
